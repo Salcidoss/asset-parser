@@ -13,7 +13,7 @@ def _extract_nodes_from_mermaid(text: str) -> Dict[str, str]:
 
 def _extract_edges_from_mermaid(text: str) -> List[Dict[str, str]]:
     edges = []
-    edge_pattern = re.compile(r"([A-Za-z0-9_]+)\s*--?>+\s*([A-Za-z0-9_]+)(?:\s*:\s*(.*))?")
+    edge_pattern = re.compile(r"([A-Za-z0-9_]+)\s*(?:\[.*?\]\s*)?--?>+\s*([A-Za-z0-9_]+)\s*(?:\[.*?\]\s*)?(?:\s*:\s*(.*))?")
     for match in edge_pattern.finditer(text):
         origen, destino, label = match.groups()
         edges.append({

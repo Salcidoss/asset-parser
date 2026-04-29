@@ -68,12 +68,18 @@ python main.py --input spec.txt --output result.json --diagram mermaid
 ### Estructura del Proyecto
 ```
 /
-├── docs/          # Especificaciones y arquitectura
-├── agents/        # Definición de agentes
-├── skills/        # Skills personalizadas
-├── tools/         # Herramientas especializadas
-├── main.py        # Punto de entrada
-└── requirements.txt # Dependencias
+├── .github/
+│   ├── copilot-instructions.md  # Instrucciones para Copilot
+│   └── skills/                  # Skills personalizadas
+├── docs/                        # Especificaciones y arquitectura
+├── agents/                      # Definición de agentes
+├── tools/                       # Herramientas especializadas
+├── app/                         # Código principal del pipeline
+├── tests/                       # Pruebas unitarias
+├── main.py                      # Punto de entrada CLI
+├── pyproject.toml               # Configuración del proyecto
+├── requirements.txt             # Dependencias
+└── .gitignore                   # Archivos ignorados por Git
 ```
 
 ### Contribución

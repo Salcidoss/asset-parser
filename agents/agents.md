@@ -30,7 +30,7 @@ Este documento define los agentes utilizados en el sistema de ingesta y parsing 
 ## 4. Agente de AssetIdentification (AssetAgent)
 
 - **Propósito**: Identificar y clasificar activos en sistemas basados en descripciones técnicas.
-- **Skills utilizados**: skill_AssetIdentification (ver skills/skill_AssetIdentification.md).
+- **Skills utilizados**: skill_AssetIdentification (ver .github/skills/skill_AssetIdentification.md).
 - **Entradas**: Descripciones de sistema, diagramas de flujo de datos.
 - **Salidas**: Inventario de activos JSON, matriz de clasificación Markdown, evaluación de confianza.
 - **Comportamiento**: Cataloga datos, componentes y credenciales; asigna clasificaciones de sensibilidad y objetivos de protección.

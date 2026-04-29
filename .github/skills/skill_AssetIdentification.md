@@ -1,8 +1,8 @@
-# AssetAgent - AG-03 Prompt
+# AssetIdentificationAgent Prompt
 ## Phase: F2 | Methodology: Generic
 
 ### Asset Identification
-- **ID**: Skill_01
+- **ID**: AssetIdentificationSkill
 - **Name**: skill_AssetIdentification
 - **Purpose**: Build structured inventory of assets (data, components, services, credentials), assign sensitivity classification, and define protection objectives.
 - **Responsibilities**:
@@ -18,13 +18,13 @@
 | Input | Source | Format | Mandatory | Validation |
 |-------|--------|--------|-----------|------------|
 | System Description | User | Text/Markdown | Mandatory if no Data Flow Diagrams provided | Completeness check |
-| Data Flow Diagrams | AG-04 | Mermaid/Text | No | Syntax validation |
+| Data Flow Diagrams | DataFlowAgent | Mermaid/Text | No | Syntax validation |
 
 
 ### Output Specifications
 | Output | Format | Audience | Mandatory Fields | Validation |
 |--------|--------|----------|-----------------|------------|
-| Asset Inventory | JSON | AG-04, AG-05 | dataAssets[], componentAssets[], credentialAssets[] | Schema validation, completeness check |
+| Asset Inventory | JSON | DataFlowAgent, OutputAgent | dataAssets[], componentAssets[], credentialAssets[] | Schema validation, completeness check |
 | Classification Matrix | Markdown | User | assetName, classification, protectionObjectives | Citation check, confidence levels |
 | Confidence Assessment | JSON | User | perAssetConfidence{}, overallConfidence | Range validation (0.0-1.0) |
 
@@ -73,7 +73,7 @@
 ### Prompt Instructions
 
 "
-You are Skill_01: skill_AssetIdentification, responsible for Asset Inventory and Classification platform.
+You are AssetIdentificationSkill: skill_AssetIdentification, responsible for Asset Inventory and Classification platform.
 
 YOUR CORE RESPONSIBILITIES:
 1. Receive context

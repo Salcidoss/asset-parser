@@ -11,6 +11,27 @@ def _normalize_list(items: List[str]) -> List[str]:
     return sorted({item.strip() for item in items if item and item.strip()})
 
 
+def _detect_faltantes(inventory: Dict) -> str:
+    faltantes = ["# Información Faltante e Inconsistencias", ""]
+    # Lógica básica: si no hay flujos, faltan; si entidades no conectadas, etc.
+    if not inventory.get("flujos"):
+        faltantes.append("## Faltantes")
+        faltantes.append("- No se detectaron flujos de datos. Especificar interacciones entre componentes.")
+    if not inventory.get("entidades"):
+        faltantes.append("- Falta definición de entidades de datos.")
+    # Inconsistencias: componentes mencionados en flujos pero no listados
+    mencionados = set()
+    for flujo in inventory.get("flujos", []):
+        mencionados.add(flujo["origen"])
+        mencionados.add(flujo["destino"])
+    todos = set(inventory.get("componentes", []) + inventory.get("actores", []) + inventory.get("entidades", []))
+    no_listados = mencionados - todos
+    if no_listados:
+        faltantes.append("## Inconsistencias")
+        faltantes.append(f"- Elementos mencionados en flujos pero no catalogados: {', '.join(no_listados)}")
+    return "\n".join(faltantes)
+
+
 def _build_summary(inventory: Dict) -> str:
     header = ["# Resumen de alto nivel", "", "Este sistema incluye actores y componentes clave y describe sus relaciones de interoperabilidad.", ""]
     table = ["## Actores y Componentes", "| Tipo | Nombre | Descripción |", "|---|---|---|"]
@@ -48,4 +69,22 @@ def run_pipeline(input_path: Path, output_dir: Path, diagram_format: str = "merm
     if diagram_format == "mermaid":
         inventory["diagrama_mermaid"] = inventory["diagrama"]
 
-    return inventory
+    # Generar faltantes
+    faltantes = _detect_faltantes(inventory)
+
+    # Datos JSON limpios
+    json_data = {
+        "componentes": inventory["componentes"],
+        "actores": inventory["actores"],
+        "entidades": inventory["entidades"],
+        "flujos": inventory["flujos"],
+        "servicios": inventory.get("servicios", []),
+        "contexto": inventory.get("contexto", [])
+    }
+
+    return {
+        "json_data": json_data,
+        "resumen_md": inventory["resumen_markdown"],
+        "diagrama": inventory["diagrama"],
+        "faltantes_md": faltantes
+    }

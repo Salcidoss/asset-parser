@@ -13,11 +13,13 @@ def test_pipeline_parses_text_input(tmp_path):
     output_dir = tmp_path / "output"
     result = run_pipeline(input_file, output_dir, diagram_format="mermaid")
 
-    assert "componentes" in result
-    assert "Portal Web" in result["componentes"]
-    assert "Usuario" in result["actores"]
+    assert "componentes" in result["json_data"]
+    assert "Portal Web" in result["json_data"]["componentes"]
+    assert "Usuario" in result["json_data"]["actores"]
     assert "diagrama" in result
     assert "graph TD" in result["diagrama"]
+    assert result["resumen_md"].startswith("# Resumen de alto nivel")
+    assert result["faltantes_md"].startswith("# Información Faltante")
 
 
 def test_pipeline_parses_mermaid_input(tmp_path):
@@ -29,6 +31,6 @@ def test_pipeline_parses_mermaid_input(tmp_path):
     output_dir = tmp_path / "output"
     result = run_pipeline(input_file, output_dir, diagram_format="mermaid")
 
-    assert "Base de Datos" in result["entidades"] or "Base de Datos" in result["componentes"]
-    assert len(result["flujos"]) == 2
-    assert result["resumen_markdown"].startswith("# Resumen de alto nivel")
+    assert "Base de Datos" in result["json_data"]["entidades"] or "Base de Datos" in result["json_data"]["componentes"]
+    assert len(result["json_data"]["flujos"]) == 2
+    assert result["resumen_md"].startswith("# Resumen de alto nivel")

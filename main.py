@@ -22,15 +22,22 @@ def main():
 
     result = run_pipeline(input_path, output_dir, diagram_format=args.format)
 
-    json_path = output_dir / "result.json"
-    json_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    # output.json
+    json_path = output_dir / "output.json"
+    json_path.write_text(json.dumps(result["json_data"], indent=2, ensure_ascii=False), encoding="utf-8")
 
-    summary_path = output_dir / "summary.md"
-    summary_md = result.get("resumen_markdown", "")
-    summary_path.write_text(summary_md, encoding="utf-8")
+    # resumen.md
+    summary_path = output_dir / "resumen.md"
+    summary_path.write_text(result["resumen_md"], encoding="utf-8")
 
-    diagram_path = output_dir / ("diagram.mmd" if args.format == "mermaid" else "diagram.xml")
-    diagram_path.write_text(result.get("diagrama", ""), encoding="utf-8")
+    # diagrama.mermaid o .xml
+    diagram_ext = "mermaid" if args.format == "mermaid" else "xml"
+    diagram_path = output_dir / f"diagrama.{diagram_ext}"
+    diagram_path.write_text(result["diagrama"], encoding="utf-8")
+
+    # faltantes.md
+    faltantes_path = output_dir / "faltantes.md"
+    faltantes_path.write_text(result["faltantes_md"], encoding="utf-8")
 
     print(f"Outputs written to {output_dir.resolve()}")
 

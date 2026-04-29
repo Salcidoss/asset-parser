@@ -27,14 +27,65 @@ El sistema se basa en un pipeline de agentes y herramientas:
 ## Instalación
 
 ### Prerrequisitos
-- Python 3.9+
-- Dependencias: Instalar con `pip install -r requirements.txt` (LangChain, spaCy, Hugging Face Transformers, etc.).
+- Python 3.9 o superior.
+- Git para clonar el repositorio.
+- (Opcional) Ollama para ejecutar LLMs open-source localmente.
 
-### Pasos
-1. Clona el repositorio: `git clone <url>`
-2. Instala dependencias: `pip install -r requirements.txt`
-3. Configura variables de entorno (ej: API keys para LLMs).
-4. Ejecuta el pipeline: `python main.py --input archivo.txt`
+### Pasos de Instalación
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/Salcidoss/asset-parser.git
+   cd asset-parser
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. (Opcional) Instala spaCy model para NLP:
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
+
+4. Configura las variables de entorno (ver sección siguiente).
+
+### Verificación de Instalación
+Ejecuta las pruebas para verificar que todo funciona correctamente:
+```bash
+pytest tests/
+```
+Si todas las pruebas pasan (4/4), la instalación es correcta. También puedes ejecutar un ejemplo simple:
+```bash
+python main.py --input "Usuario -> Portal Web: login" --output test_output
+```
+Verifica que se generen `test_output.json`, `test_output.md`, `test_output.mermaid` y `test_output_faltantes.md`.
+
+## Configuración
+
+### Variables de Entorno
+El sistema utiliza LLMs para parsing y generación. Para priorizar open-source, recomendamos usar Ollama con modelos como Llama 3 o Mistral. Si no tienes acceso a APIs, usa modelos locales de Hugging Face.
+
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+```bash
+# Para Ollama (recomendado para open-source local)
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.2:3b  # O mistral:7b para mejor calidad
+
+# Alternativa: Hugging Face local (sin API keys)
+HF_MODEL=microsoft/DialoGPT-medium  # Modelo local para NLP básico
+
+# Si usas APIs (no recomendado para privacidad)
+OPENAI_API_KEY=tu_clave_aqui  # Solo si es necesario
+```
+
+### Configuración de LLMs Open-Source
+1. Instala Ollama: Descárgalo desde [ollama.ai](https://ollama.ai) e instala.
+2. Ejecuta un modelo: `ollama run llama3.2:3b`
+3. El sistema detectará automáticamente si Ollama está corriendo y usará el modelo configurado.
+
+Si prefieres Hugging Face sin servidor, instala transformers y usa modelos como `microsoft/DialoGPT-medium` para tareas básicas.
 
 ## Uso
 
@@ -49,19 +100,39 @@ python main.py --input spec.txt --output result.json --diagram mermaid
 ```
 
 ### Salida
-- `result.json`: Inventario completo con componentes, actores, flujos, faltantes.
-- `summary.md`: Resumen con tablas de interoperabilidad.
-- `diagram.mmd`: Código Mermaid para el diagrama.
+El sistema genera archivos separados para diferentes propósitos:
+- `output.json`: Estructura JSON para validación automática y procesamiento.
+- `resumen.md`: Documento Markdown con tablas y descripciones para validación humana.
+- `diagrama.mermaid`: Código Mermaid para visualización del diagrama.
+- `faltantes.md`: Lista de faltantes e inconsistencias en Markdown.
 
-### Ejemplo de Salida JSON
-```json
-{
-  "componentes": ["Portal Web", "API"],
-  "actores": ["Usuario"],
-  "flujos": [{"origen": "Usuario", "destino": "Portal Web"}],
-  "diagrama_mermaid": "graph TD; Usuario --> PortalWeb;"
-}
-```
+### Ejemplo de Salida
+- **output.json**:
+  ```json
+  {
+    "componentes": ["Portal Web", "API de Autenticación"],
+    "actores": ["Usuario"],
+    "entidades": ["Cuenta"],
+    "flujos": [{"origen": "Usuario", "destino": "Portal Web", "tipo": "solicitud"}]
+  }
+  ```
+- **resumen.md**:
+  ```markdown
+  # Resumen
+  ## Componentes
+  | Nombre | Descripción |
+  |--------|-------------|
+  | Portal Web | Interfaz de usuario |
+  ```
+- **diagrama.mermaid**:
+  ```mermaid
+  graph TD; Usuario --> PortalWeb;
+  ```
+- **faltantes.md**:
+  ```markdown
+  # Faltantes
+  - Falta especificar autenticación.
+  ```
 
 ## Desarrollo
 

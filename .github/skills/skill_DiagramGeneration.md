@@ -15,7 +15,7 @@
 ### Input Requirements
 | Input | Source | Format | Mandatory | Validation |
 |-------|--------|--------|-----------|------------|
-| Asset Inventory | AG-03 | JSON | Yes | Schema validation |
+| Asset Inventory | AssetIdentificationAgent | JSON | Yes | Schema validation |
 | Options | User | JSON | No | Format check |
 
 ### Output Specifications

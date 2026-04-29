@@ -1,0 +1,11 @@
+[project]
+name = "asset-parser"
+version = "0.1.0"
+description = "App to ingest documentation, identify assets and generate diagrams."
+requires-python = ">=3.9"
+dependencies = [
+    "pydantic>=1.10",
+]
+
+[project.scripts]
+asset-parser = "main:main"

@@ -1,0 +1,16 @@
+stages:
+  - test
+
+test:
+  stage: test
+  image: python:3.11
+  before_script:
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - pytest --maxfail=1 --disable-warnings -q
+  artifacts:
+    when: always
+    paths:
+      - .pytest_cache/
+    expire_in: 1 week
